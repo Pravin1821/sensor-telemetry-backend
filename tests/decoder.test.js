@@ -3,6 +3,7 @@ const assert = require('node:assert');
 const { decodePacket, PacketError } = require('../src/services/decoder.service');
 const { buildPacket } = require('./helpers');
 const sample = require('./fixtures/samplePacket.json');
+const rows = require('./fixtures/sampleRows.json');
 
 test('decodes the assignment sample packet', () => {
   const r = decodePacket(sample.data);
@@ -53,4 +54,20 @@ test('rejects checksum mismatch', () => {
   const p = buildPacket();
   p[14] = 50; // change battery without fixing checksum
   assert.throws(() => decodePacket(p), /checksum/);
+});
+
+test('decodes 10 rows from the sample dataset', () => {
+  assert.strictEqual(rows.length, 10);
+  for (const row of rows) {
+    assert.deepStrictEqual(decodePacket(row.data), row.expected);
+  }
+});
+
+test('first dataset packet matches the values stated in the Sample Database Guide', () => {
+  const first = rows.find((r) => r.id === 1);
+  const r = decodePacket(first.data);
+  assert.strictEqual(r.deviceId, 70003);
+  assert.strictEqual(r.sequence, 100);
+  assert.strictEqual(r.temperature, 31.72);
+  assert.strictEqual(r.battery, 91);
 });
