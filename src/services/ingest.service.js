@@ -1,6 +1,7 @@
 const { decryptPacket, DecryptionError } = require('./crypto.service');
 const { decodePacket, PacketError } = require('./decoder.service');
 const { activityScore } = require('./activity.service');
+const { checkOverTemperature, checkInactive } = require('./alert.service');
 
 const DUPLICATE_WINDOW_SECONDS = 120;
 
@@ -51,7 +52,11 @@ function ingestPacket(db, body, now = () => new Date().toISOString()){
                 packet.temperature, packet.battery, score, JSON.stringify(packet.samples)
             ).lastInsertRowid;
         
-        return { duplicate: false, readingId, packet };
+        const alerts = [];
+        if (checkOverTemperature(db, packet)) alerts.push('OVER_TEMPERATURE');
+        if (checkInactive(db, packet)) alerts.push('INACTIVE');
+
+        return { duplicate: false, readingId, packet, alerts };
     });
 
     return save();
