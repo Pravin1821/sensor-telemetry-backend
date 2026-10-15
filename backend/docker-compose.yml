@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      DB_PATH: /app/data/app.db
+      PORT: "3000"
+    volumes:
+      - sensor-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  sensor-data:
