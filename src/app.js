@@ -6,11 +6,13 @@ const authRoutes = require('./routes/auth.routes');
 const { requireGatewayKey, requireUser } = require('./middleware/auth');
 const { DecryptionError } = require('./services/crypto.service');
 const { PacketError } = require('./services/decoder.service');
+const cors = require('cors');
 
 const open = (req, res, next) => next();
 
 function createApp(db, auth = null) {
     const app = express();
+    app.use(cors());
     app.use(express.json({limit:'100kb'}));
 
     const gateway = auth ? requireGatewayKey(auth.gatewayApiKey) : open;

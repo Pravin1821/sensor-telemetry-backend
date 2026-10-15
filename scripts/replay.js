@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+require('dotenv').config();
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -8,6 +9,7 @@ function arg(name, fallback) {
 const speed = Number(arg('speed', '1'));
 const baseUrl = arg('url', 'http://localhost:3000');
 const file = arg('file', './data/encrypted_packets.json');
+const apiKey = arg('key', process.env.GATEWAY_API_KEY || '');
 
 if (!(speed > 0)) {
   console.error('--speed must be a positive number');
