@@ -35,7 +35,7 @@ async function main() {
     try {
       const res = await fetch(`${baseUrl}/api/ingest`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
         body: JSON.stringify(p.body),
       });
       const json = await res.json().catch(() => ({}));

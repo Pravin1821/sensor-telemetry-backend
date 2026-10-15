@@ -6,7 +6,8 @@ const { checkOffline } = require('./services/alert.service');
 config.getKey(); 
 
 const db = createDb();
-const app = createApp(db);
+const auth = config.getAuth()
+const app = createApp(db, auth);
 
 const OFFLINE_CHECK_INTERVAL_MS = Number(process.env.OFFLINE_CHECK_MS) || 5000;
 
