@@ -1,8 +1,8 @@
 const OVER_TEMP_C = 40.0;
 const OFFLINE_SECONDS = 30 * 60;
 const INACTIVE_WINDOW_SECONDS = 60 * 60;
-const INACTIVE_THRESHOLD = 25; 
-const MIN_READINGS_FOR_INACTIVE = 200;; 
+const INACTIVE_THRESHOLD = 10; 
+const MIN_READINGS_FOR_INACTIVE = 120;; 
 
 function raiseAlert(db, deviceId, type, raisedAt, message) {
   const result = db
